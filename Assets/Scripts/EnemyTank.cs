@@ -27,21 +27,19 @@ public class EnemyTank : MonoBehaviour {
 	
 	void Update ()
 	{
-		CoolDown -= Time.deltaTime;
-		if(CoolDown <=0)
-				Fire ();
-
-			RotateCannon();
+		Fire ();
+		RotateCannon();
+		Move ();
 	}
 
 	void RotateCannon(){
 		Debug.DrawLine (m_transform.position, Player.transform.position, Color.cyan);
 
-		Vector3 lookPosition = Player.transform.position - CannonBase.transform.position;
-		lookPosition.x = 0;
+		Vector3 lookPosition = Player.transform.position - CannonBase.position;
+		lookPosition.y = 0;
 
 		Quaternion rotation = Quaternion.LookRotation (lookPosition);
-		CannonBase.transform.rotation = Quaternion.Slerp (CannonBase.transform.rotation, rotation, Time.deltaTime * 2.0f);
+		CannonBase.transform.rotation = Quaternion.Slerp (rotation,CannonBase.transform.rotation, Time.deltaTime * 2.0f);
 	}
 
 	void SetCoolDown ()
@@ -49,10 +47,27 @@ public class EnemyTank : MonoBehaviour {
 		CoolDown = Random.Range (0, MaxCoolDownTime);
 	}
 
+	void Move(){
+		Vector3 pos = Player.transform.position - CannonBase.position;
+		pos.y = 0;
+		Quaternion rotation = Quaternion.LookRotation (pos);
+		m_transform.rotation = Quaternion.Slerp (m_transform.rotation, rotation, Time.deltaTime * 1.0f);
+
+		float distance = Vector3.Distance (m_transform.position, Player.transform.position);
+
+		if (distance > 30) {
+			m_transform.position += m_transform.forward * MoveSpeed * Time.deltaTime;
+			}
+	}
+
 	void Fire(){
-			
-			GameObject go = (GameObject)GameObject.Instantiate (ProjectTile, ProjectRef.position, ProjectRef.rotation);
-			go.rigidbody.velocity = ProjectRef.up * ProjectTileSpeed;
+		return;
+		CoolDown -= Time.deltaTime;
+		if (CoolDown > 0)
+			return;
+
+		GameObject go = (GameObject)GameObject.Instantiate (ProjectTile, ProjectRef.position, ProjectRef.rotation);
+		go.rigidbody.velocity = ProjectRef.up * ProjectTileSpeed;
 		SetCoolDown ();
 	}
 }
