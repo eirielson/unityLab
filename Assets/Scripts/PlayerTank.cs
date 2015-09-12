@@ -3,7 +3,12 @@ using System.Collections;
 
 public class PlayerTank : MonoBehaviour
 {
+	public GameObject ProjectTile;
+	public Transform ProjectRef;
+
 	private Transform m_transform;
+	public int MoveSpeed = 40;
+	public int RotateSpeed = 70;
 
 	void Start ()
 	{
@@ -13,6 +18,7 @@ public class PlayerTank : MonoBehaviour
 	void Update ()
 	{
 		GetInput ();
+		Fire ();
 	}
 
 	/// <summary>
@@ -37,8 +43,8 @@ public class PlayerTank : MonoBehaviour
 		}
 
 
-		float translation = vertical_input * 100;
-		float rotarion = horizontal_input * 100;
+		float translation = vertical_input * MoveSpeed;
+		float rotarion = horizontal_input * RotateSpeed;
 
 		//
 		translation *= Time.deltaTime;
@@ -46,5 +52,12 @@ public class PlayerTank : MonoBehaviour
 
 		m_transform.Translate (translation, 0, 0);
 		m_transform.Rotate (0, rotarion,0);
+	}
+
+
+	void Fire(){
+		if(Input.GetKey(KeyCode.Space)){
+			GameObject go = (GameObject)GameObject.Instantiate (ProjectTile, ProjectRef.position, ProjectRef.rotation);
+		}
 	}
 }
