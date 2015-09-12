@@ -3,10 +3,14 @@ using System.Collections;
 
 public class PlayerTank : MonoBehaviour
 {
+	private Transform m_transform;
+
 	public GameObject ProjectTile;
 	public Transform ProjectRef;
+	public float ProjectTileSpeed = 50;
+	public Transform CannonBase;
 
-	private Transform m_transform;
+
 	public int MoveSpeed = 40;
 	public int RotateSpeed = 70;
 
@@ -44,20 +48,26 @@ public class PlayerTank : MonoBehaviour
 
 
 		float translation = vertical_input * MoveSpeed;
-		float rotarion = horizontal_input * RotateSpeed;
+		float rotation = horizontal_input * RotateSpeed;
 
 		//
 		translation *= Time.deltaTime;
-		rotarion *= Time.deltaTime;
+		rotation *= Time.deltaTime;
 
 		m_transform.Translate (translation, 0, 0);
-		m_transform.Rotate (0, rotarion,0);
+		m_transform.Rotate (0, rotation,0);
+
+		float cannonRotation = Input.GetAxis ("Mouse X") * MoveSpeed;
+		CannonBase.Rotate (0, cannonRotation, 0);
+
+
 	}
 
 
 	void Fire(){
-		if(Input.GetKey(KeyCode.Space)){
+		if(Input.GetMouseButtonDown(button:0)){
 			GameObject go = (GameObject)GameObject.Instantiate (ProjectTile, ProjectRef.position, ProjectRef.rotation);
+			go.rigidbody.velocity = ProjectRef.up * ProjectTileSpeed;
 		}
 	}
 }
