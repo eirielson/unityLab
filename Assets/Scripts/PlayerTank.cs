@@ -67,7 +67,7 @@ public class PlayerTank : MonoBehaviour
 	void Fire(){
 		if(Input.GetMouseButtonDown(button:0)){
 			GameObject go = (GameObject)GameObject.Instantiate (ProjectTile, ProjectRef.position, ProjectRef.rotation);
-			go.rigidbody.velocity = ProjectRef.up * ProjectTileSpeed;
+			go.rigidbody.velocity = ProjectRef.up * 20;
 		}
 	}
 }
